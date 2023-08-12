@@ -1,52 +1,64 @@
-#!/usr/bin/env pyhton3
-from uuid import uuid4
+#!/usr/bin/env python3
 from datetime import datetime
+from uuid import uuid4
 import models
 
+"""
+Parent class to all classes in the AirBnB clone project
+"""
 
-class BaseModel:
+
+class BaseModel():
+    """Parent class for AirBnB clone project
+    """
+
     def __init__(self, *args, **kwargs):
-        if not kwargs:
-            self.id = str(uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
-            models.storage.new(self)
-        else:
+        """
+        Initialize attributes: uuid4, dates when class was created/updated
+        """
+        if kwargs:
             for key, value in kwargs.items():
-                if key in ("updated_at", "created_at"):
-                    self.__dict__[key] = datetime.strptime(
-                            value, "%Y-%m-%dT%H:%M:%S.%f")
-                elif key[0] == "id":
-                    self.__dict__[key] = str(value)
+                if "created_at" == key:
+                    self.created_at = datetime.strptime(kwargs["created_at"],
+                                                        '%Y-%m-%dT%H:%M:%S.%f')
+                elif "updated_at" == key:
+                    self.updated_at = datetime.strptime(kwargs["updated_at"],
+                                                        '%Y-%m-%dT%H:%M:%S.%f')
+                elif "__class__" == key:
+                    pass
                 else:
-                    self.__dict__[key] = value
-
-    def to_dict(self):
-        """
-        Method returns a dictionary containing all
-        keys/values of __dict__ instance
-        """
-        obj_to_dict = {}
-        obj_to_dict["__class__"] = self.__class__.__name__
-        for key, value in self.__dict__.items():
-            if key == "created_at" or key == "updated_at":
-                obj_to_dict[key] = value.isoformat()
-            else:
-                obj_to_dict[key] = value
-        return obj_to_dict
-
-    def save(self):
-        self.updated_at = str(datetime.isoformat(datetime.utcnow()))
-        models.storage.save()
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """
-        Returns string representation of the class
+        Return class name, id, and the dictionary
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
 
     def __repr__(self):
         """
-        Returns a repr string
+        returns string repr
         """
-        return self.__str__()
+        return (self.__str__())
+
+    def save(self):
+        """
+        Instance method to:
+        """
+        self.updated_at = datetime.now()
+        models.storage.save()
+
+    def to_dict(self):
+        """
+        Return dictionary of BaseModel with string formats of times
+        """
+        dic = self.__dict__.copy()
+        dic["created_at"] = self.created_at.isoformat()
+        dic["updated_at"] = self.updated_at.isoformat()
+        dic["__class__"] = self.__class__.__name__
+        return dic
