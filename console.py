@@ -147,7 +147,7 @@ class HBNBCommand(cmd.Cmd):
                     lst.append(str(value))
         else:
             for key, value in objects.items():
-                lst.append(str(v))
+                lst.append(str(value))
         return lst
 
 
