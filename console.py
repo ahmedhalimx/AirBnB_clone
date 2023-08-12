@@ -46,7 +46,7 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, line):
         '''Creates an instance of BaseModel, saves it and print its id'''
         command = self.parseline(line)[0]
-        if command == None:
+        if command is None:
             print('** class name missing **')
         elif not (command in self.classes):
             print('** class doesn\'t exist **')
@@ -60,7 +60,7 @@ class HBNBCommand(cmd.Cmd):
         based on the class name and id'''
         command = self.parseline(line)[0]
         arg = self.parseline(line)[1]
-        if command == None:
+        if command is None:
             print("** class name is missing **")
 
         elif not (command in self.classes):
@@ -69,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         else:
             inst = storage.all().get(command+'.'+arg)
-            if inst == None:
+            if inst is None:
                 print("** no instance found **")
             else:
                 print(inst)
@@ -78,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
         '''Deletes an instance based on its id and name'''
         command = self.parseline(line)[0]
         arg = self.parseline(line)[1]
-        if command == None:
+        if command is None:
             print("** class name is missing **")
         elif not (command in self.classes):
             print("** class doesn't exist **")
@@ -86,7 +86,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         else:
             inst = storage.all().get(command+'.'+arg)
-            if inst == None:
+            if inst is None:
                 print("** no instance found **")
             else:
                 del storage.all()[command+'.'+arg]
@@ -97,7 +97,7 @@ class HBNBCommand(cmd.Cmd):
         base_models_collection = storage.all()
         model = self.parseline(line)[0]
         lst = []
-        if model == None:
+        if model is None:
             for i in base_models_collection.values():
                 lst.append(str(i))
             print(lst)
@@ -114,17 +114,17 @@ class HBNBCommand(cmd.Cmd):
 
         model = self.parseline(line)[0]
         attributes = self.parseline(line)[1]
-        if not (attributes == None):
+        if not (attributes is None):
             attributes = shlex.split(attributes)
             inst = attributes[0]
             instnf = storage.all().get(model+'.'+inst)
-        if model == None:
+        if model is None:
             print("** class name missing **")
         elif (not (model in self.classes)):
             print("** class doesn't exist **")
         elif inst == '':
             print("** instance id missing **")
-        elif instnf == None:
+        elif instnf is None:
             print("** instance not found **")
         elif len(attributes) < 2:
             print("** attribute name missing **")
@@ -149,6 +149,7 @@ class HBNBCommand(cmd.Cmd):
             for key, value in objects.items():
                 lst.append(str(v))
         return lst
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
