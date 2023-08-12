@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
-This is a command intepreter console for AirBnB clone project
+Defines hbnb Command line interface
 """
 import cmd
 import sys
@@ -18,15 +18,21 @@ import shlex
 
 
 class HBNBCommand(cmd.Cmd):
-    """ This is the console for the project interface
-    having many use cases on objects
-    to update, create and destroy"""
+    """The HBNB command line interface"""
 
     prompt = '(hbnb) '
-    classes = ['BaseModel', 'User', 'Place', 'Review', 'State', 'City', 'Amenity']
-    
+    classes = [
+            'BaseModel',
+            'User',
+            'Place',
+            'Review',
+            'State',
+            'City',
+            'Amenity'
+            ]
+
     def emptyline(self):
-        """Returns an empty line"""
+        """Skip empty line"""
         pass
 
     def do_quit(self, line):
@@ -38,7 +44,7 @@ class HBNBCommand(cmd.Cmd):
         sys.exit()
 
     def do_create(self, line):
-        '''Creates an instance of BaseModel saves it to json n print its id'''
+        '''Creates an instance of BaseModel, saves it and print its id'''
         command = self.parseline(line)[0]
         if command == None:
             print('** class name missing **')
@@ -50,7 +56,8 @@ class HBNBCommand(cmd.Cmd):
             print(new_instance.id)
 
     def do_show(self, line):
-        '''Prints the string representation of an instance based on the class name and id'''
+        '''Prints the string representation of an instance
+        based on the class name and id'''
         command = self.parseline(line)[0]
         arg = self.parseline(line)[1]
         if command == None:
@@ -68,7 +75,7 @@ class HBNBCommand(cmd.Cmd):
                 print(inst)
 
     def do_destroy(self, line):
-        '''Deletes a class based on its id and instance name'''
+        '''Deletes an instance based on its id and name'''
         command = self.parseline(line)[0]
         arg = self.parseline(line)[1]
         if command == None:
@@ -86,60 +93,60 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
 
     def do_all(self, line):
-        '''Prints all instances regardless of class name'''
-        baseModels = storage.all()
+        '''Prints all instances'''
+        base_models_collection = storage.all()
         model = self.parseline(line)[0]
         lst = []
         if model == None:
-            for i in baseModels.values():
+            for i in base_models_collection.values():
                 lst.append(str(i))
             print(lst)
         elif not (model in self.classes):
             print("** class doesn't exist **")
         else:
-            for i in baseModels:
+            for i in base_models_collection:
                 if i.startswith(model):
-                    lst.append(str(baseModels[i]))
+                    lst.append(str(base_models_collection[i]))
             print(lst)
 
     def do_update(self, line):
-        "Updates an instance based on class name and id"
+        "Updates an instance based on it's name and id"
 
         model = self.parseline(line)[0]
-        attrbs = self.parseline(line)[1]
-        if not (attrbs == None):
-            attrbs = shlex.split(attrbs)
-            inst = attrbs[0]
+        attributes = self.parseline(line)[1]
+        if not (attributes == None):
+            attributes = shlex.split(attributes)
+            inst = attributes[0]
             instnf = storage.all().get(model+'.'+inst)
         if model == None:
             print("** class name missing **")
-        elif not (model in self.classes):
+        elif (not (model in self.classes)):
             print("** class doesn't exist **")
         elif inst == '':
             print("** instance id missing **")
         elif instnf == None:
-            print("** instance not found **") 
-        elif len(attrbs) < 2:
+            print("** instance not found **")
+        elif len(attributes) < 2:
             print("** attribute name missing **")
-        elif len(attrbs) < 3:
-                print("** value missing **")
+        elif len(attributes) < 3:
+            print("** value missing **")
         else:
-            if attrbs[2].isdigit():
-                attrbs[2] = int(attrbs[2])
-            elif attrbs[2].replace('.', '', 1).isdigit():
-                attrbs[2] = float(attrbs[2])
-            setattr(instnf, attrbs[1], attrbs[2])
+            if attributes[2].isdigit():
+                attributes[2] = int(attributes[2])
+            elif attributes[2].replace('.', '', 1).isdigit():
+                attributes[2] = float(attributes[2])
+            setattr(instnf, attributes[1], attributes[2])
             storage.save()
 
     def get_instances(self, instance=''):
         objects = storage.all()
         lst = []
         if instance:
-            for k,v in objects.items():
-                if k.startswith(instance):
-                    lst.append(str(v))
+            for key, value in objects.items():
+                if key.startswith(instance):
+                    lst.append(str(value))
         else:
-            for k,v in objects.items():
+            for key, value in objects.items():
                 lst.append(str(v))
         return lst
 
