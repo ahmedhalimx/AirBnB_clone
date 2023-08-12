@@ -47,19 +47,19 @@ class BaseModel():
         Updates the updated_at datetime attribute
         and stores it by calling storage.save()
         """
-        self.updated_at = datetime.isoformat(datetime.utcnow()))
+        self.updated_at = datetime.isoformat(datetime.utcnow())
         models.storage.save(self)
 
     def to_dict(self):
         """
         Returns the dictionary representation of BaseModel
         """
-        obj_to_dict={}
-        obj_to_dict["__class__"]=self.__class__.__name__
+        obj_to_dict = {}
+        obj_to_dict["__class__"] = self.__class__.__name__
 
         for key, value in self.__dict__.items():
             if key == "created_at" or key == "updated_at":
-                obj_to_dict[key]=value.isoformat()
+                obj_to_dict[key] = value.isoformat()
             else:
-                obj_to_dict[key]=value
+                obj_to_dict[key] = value
         return obj_to_dict

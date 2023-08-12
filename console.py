@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Defines the HBnB console."""
 
 import cmd
@@ -109,12 +109,13 @@ class HBNBCommand(cmd.Cmd):
         elif f"{argument[0]}.{argument[1]}" not in obj_dict:
             print("** no instance found **")
         else:
-            print(obj_dict[f"{argument[0]}.{argument[1]}"]
-
+            print(obj_dict[f"{argument[0]}.{argument[1]}"])
 
     def destroy(self, arg):
-        """Usage: destroy <class> <id> or <class>.destroy(<id>)
-        Delete a class instance of a given id."""
+        """
+        Usage: destroy <class> <id> or <class>.destroy(<id>)
+        Delete a class instance of a given id.
+        """
         argument = strtok(arg)
         obj_dict = storage.all()
         if len(argument) == 0:
@@ -213,4 +214,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
-
